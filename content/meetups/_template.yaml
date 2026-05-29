@@ -1,0 +1,167 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# HOW TO CREATE A NEW MEETUP
+# ─────────────────────────────────────────────────────────────────────────────
+# 1. Copy this file:
+#      cp content/meetups/_template.yaml content/meetups/your-meetup-slug.yaml
+#
+# 2. The filename becomes the URL slug:
+#      accra-jun-2025.yaml → /meetups/accra-jun-2025/
+#    Use lowercase, hyphens only, no spaces.
+#
+# 3. Fill in all REQUIRED fields. OPTIONAL fields can be set to null
+#    or removed entirely — the page adapts automatically.
+#
+# 4. Status (upcoming / live / past) is computed automatically from
+#    the start and end datetime values. Do not add a status field.
+#
+# 5. Validate before pushing:
+#      cue vet schemas/meetup.cue -d '#Meetup' content/meetups/your-meetup-slug.yaml
+#
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── REQUIRED ─────────────────────────────────────────────────────────────────
+
+# Meetup display name
+name: "City Meetup — Month Year"
+
+# Start and end datetimes in ISO 8601 with timezone offset.
+# Format: "YYYY-MM-DDTHH:MM:SS+HH:MM"
+# Examples:
+#   Accra (GMT+0):  "2025-06-14T18:00:00+00:00"
+#   Lagos (GMT+1):  "2025-06-14T18:00:00+01:00"
+#   Nairobi (GMT+3): "2025-06-14T18:00:00+03:00"
+start: "2025-01-01T18:00:00+00:00"
+end:   "2025-01-01T21:00:00+00:00"
+
+# Short description shown on the listing card and detail page.
+description: >
+  A short description of this meetup.
+
+# Cover image URL (Google Photos, Cloudinary, etc.)
+cover: https://lh3.googleusercontent.com/your-cover-image
+
+# ── LOCATION ─────────────────────────────────────────────────────────────────
+location:
+  # Venue display name
+  name: "Venue Name, City"
+  # OPTIONAL: Google Maps or any map URL.
+  # Remove this line or set to null if no map link.
+  map_url: https://maps.google.com/?q=Venue+Name+City
+
+# ── STREAM / RECORDING ───────────────────────────────────────────────────────
+# OPTIONAL. One URL serves all three states:
+#   - upcoming: hidden
+#   - live:     shown as "Watch live →"
+#   - past:     shown as "Watch recording →"
+# Set to null or remove if not streaming.
+stream_url: null
+
+# ── REGISTRATION ─────────────────────────────────────────────────────────────
+# OPTIONAL. Shown as a CTA button when status is upcoming.
+# Use Eventbrite, Paystack, Luma, or any registration URL.
+# Set to null or remove after the event.
+registration_url: null
+
+# ── SPEAKERS ─────────────────────────────────────────────────────────────────
+# List every speaker. Each speaker appears in the speakers grid.
+# slides_url and recording_url are optional — add them after the event.
+#
+# To add a new speaker: copy one block below and fill in the fields.
+# To remove a speaker: delete the entire block (from "- name:" to the last line).
+speakers:
+  - # REQUIRED
+    name: "Speaker Full Name"
+    title: "Job Title at Company"
+    bio: "A short bio about this speaker."
+    image: https://example.com/speaker-photo.jpg
+    talk_title: "Title of Their Talk"
+    talk_description: "A short description of what they will talk about."
+
+    # OPTIONAL — add after the event
+    slides_url: null
+    recording_url: null
+
+    # OPTIONAL — social links. Platform must be one of:
+    # x | linkedin | github | website | youtube | instagram | facebook | discord | slack
+    socials:
+      - platform: x
+        url: https://x.com/speakerhandle
+      - platform: linkedin
+        url: https://linkedin.com/in/speakerhandle
+
+# ── SCHEDULE ─────────────────────────────────────────────────────────────────
+# List every slot in chronological order.
+#
+# type options:
+#   networking     — open mingling, no structured content
+#   talk           — single speaker presentation
+#   panel          — multiple speakers, moderated discussion
+#   workshop       — hands-on, participants do something
+#   open_discussion — whole-room discussion (e.g. system design, AMA, debate)
+#   break          — break / refreshments
+#
+# lead: OPTIONAL free text — name of the person facilitating this slot.
+#   Can be a speaker name, an external host, "TBD", or null.
+#
+# resources: OPTIONAL list of links relevant to this slot.
+#   Add slides, notes, further reading, etc. after the event.
+#   Set to [] or remove the key if no resources.
+#
+# To add a new schedule item: copy one block and fill in the fields.
+schedule:
+  - time: "6:00 PM"
+    title: Doors open & networking
+    type: networking
+    lead: null
+    resources: []
+
+  - time: "6:30 PM"
+    title: Opening remarks
+    type: talk
+    lead: null           # e.g. lead: "MC Name"
+    resources: []
+
+  - time: "6:45 PM"
+    title: "Speaker Talk Title"
+    type: talk
+    lead: "Speaker Full Name"
+    resources:
+      - title: Slides
+        url: https://slides.com/placeholder
+      # Add more resources:
+      # - title: Code repo
+      #   url: https://github.com/...
+
+  - time: "7:30 PM"
+    title: "Open Discussion: Topic"
+    type: open_discussion
+    lead: null
+    resources: []
+
+  - time: "7:50 PM"
+    title: Break & refreshments
+    type: break
+    lead: null
+    resources: []
+
+  - time: "8:00 PM"
+    title: Networking & close
+    type: networking
+    lead: null
+    resources: []
+
+# ── MEDIA ────────────────────────────────────────────────────────────────────
+# Populated AFTER the event. Leave as empty lists before.
+
+# Google Photos shared URLs, Cloudinary, or any direct image URLs.
+# To add photos: add each URL as a new list item.
+photos: []
+
+# YouTube embed URLs for session recordings.
+# embed_url format: https://www.youtube-nocookie.com/embed/VIDEO_ID
+# To add a video: copy one block and fill in the fields.
+videos: []
+# Example:
+# videos:
+#   - title: "Talk Title — Speaker Name"
+#     embed_url: https://www.youtube-nocookie.com/embed/VIDEO_ID

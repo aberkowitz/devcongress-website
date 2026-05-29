@@ -20,7 +20,9 @@ const activities = defineCollection({
   schema: z.object({
     title: z.string().min(2),
     description: z.string().min(10),
-    link: z.string().startsWith('/'),
+    link: z.string().refine(v => v.startsWith('/') || v.startsWith('http'), {
+      message: 'link must be a relative path or full URL',
+    }),
     color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
     order: z.number().int().min(1),
     status: z.enum(['active', 'ongoing', 'upcoming']),
@@ -37,15 +39,50 @@ const partners = defineCollection({
   }),
 });
 
+const meetupSpeakerSchema = z.object({
+  name: z.string().min(2),
+  title: z.string().min(2),
+  bio: z.string().min(10),
+  image: z.string().url(),
+  talk_title: z.string().min(2),
+  talk_description: z.string().min(10),
+  slides_url: z.string().url().nullable().optional(),
+  recording_url: z.string().url().nullable().optional(),
+  socials: z.array(socialSchema).optional(),
+});
+
+const scheduleItemSchema = z.object({
+  time: z.string().min(3),
+  title: z.string().min(2),
+  type: z.enum(['networking', 'talk', 'panel', 'workshop', 'open_discussion', 'break']),
+  lead: z.string().nullable().optional(),
+  resources: z.array(z.object({
+    title: z.string().min(2),
+    url: z.string().url(),
+  })).optional(),
+});
+
 const meetups = defineCollection({
-  loader: glob({ pattern: '**/meta.yaml', base: './content/meetups' }),
+  loader: glob({ pattern: '[!_]*.yaml', base: './content/meetups' }),
   schema: z.object({
     name: z.string().min(2),
-    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    location: z.string().min(2),
+    start: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/),
+    end: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/),
     description: z.string().min(10),
     cover: z.string().url(),
-    photos: z.array(z.string().url()),
+    location: z.object({
+      name: z.string().min(2),
+      map_url: z.string().url().nullable().optional(),
+    }),
+    stream_url: z.string().url().nullable().optional(),
+    registration_url: z.string().url().nullable().optional(),
+    speakers: z.array(meetupSpeakerSchema).optional(),
+    schedule: z.array(scheduleItemSchema).optional(),
+    photos: z.array(z.string().url()).optional(),
+    videos: z.array(z.object({
+      title: z.string().min(2),
+      embed_url: z.string().url(),
+    })).optional(),
   }),
 });
 

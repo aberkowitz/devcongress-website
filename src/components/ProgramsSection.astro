@@ -14,6 +14,7 @@ interface Props { activities: Activity[]; }
 const { activities } = Astro.props;
 const sorted = [...activities].sort((a, b) => a.data.order - b.data.order);
 const statusLabel: Record<string, string> = { active: 'Active', ongoing: 'Ongoing', upcoming: 'Upcoming' };
+const isExternal = (url: string) => url.startsWith('http');
 ---
 
 <section class="section" id="programs">
@@ -39,10 +40,17 @@ const statusLabel: Record<string, string> = { active: 'Active', ongoing: 'Ongoin
             </span>
           </div>
           <h3 class="heading-serif program-title">
-            <a href={activity.data.link}>{activity.data.title}</a>
+            <a
+              href={activity.data.link}
+              {...(isExternal(activity.data.link) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            >{activity.data.title}</a>
           </h3>
           <p class="program-desc">{activity.data.description}</p>
-          <a href={activity.data.link} class="program-link">
+          <a
+            href={activity.data.link}
+            class="program-link"
+            {...(isExternal(activity.data.link) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+          >
             Learn more →
           </a>
         </li>
