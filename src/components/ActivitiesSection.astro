@@ -1,0 +1,35 @@
+---
+interface Activity {
+  id: string;
+  data: {
+    title: string;
+    description: string;
+    link: string;
+    color: string;
+    order: number;
+  };
+}
+
+interface Props {
+  activities: Activity[];
+}
+
+const { activities } = Astro.props;
+const sorted = [...activities].sort((a, b) => a.data.order - b.data.order);
+---
+
+<section id="activities">
+  <h2>What we've been up to</h2>
+  <ul>
+    {sorted.map((activity) => (
+      <li>
+        <article>
+          <h3>
+            <a href={activity.data.link}>{activity.data.title}</a>
+          </h3>
+          <p>{activity.data.description}</p>
+        </article>
+      </li>
+    ))}
+  </ul>
+</section>

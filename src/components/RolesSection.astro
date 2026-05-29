@@ -1,0 +1,16 @@
+---
+interface Props {
+  roles: string[];
+}
+
+const { roles } = Astro.props;
+---
+
+<section id="roles">
+  <h2>Our community includes</h2>
+  <ul>
+    {roles.map((role) => (
+      <li>{role}</li>
+    ))}
+  </ul>
+</section>

@@ -1,0 +1,42 @@
+---
+interface Partner {
+  id: string;
+  data: {
+    name: string;
+    logo: string;
+    url?: string;
+    tier?: string;
+  };
+}
+
+interface Props {
+  partners: Partner[];
+}
+
+const { partners } = Astro.props;
+
+const tierOrder: Record<string, number> = { gold: 1, silver: 2, community: 3 };
+const sorted = [...partners].sort((a, b) => {
+  const ta = tierOrder[a.data.tier ?? 'community'] ?? 3;
+  const tb = tierOrder[b.data.tier ?? 'community'] ?? 3;
+  return ta - tb;
+});
+---
+
+<section id="partners">
+  <h2>Partners &amp; Sponsors</h2>
+  <p>We are grateful for the support of the following organisations.</p>
+  <ul>
+    {sorted.map((partner) => (
+      <li>
+        {partner.data.url ? (
+          <a href={partner.data.url} target="_blank" rel="noopener noreferrer">
+            <img src={partner.data.logo} alt={partner.data.name} loading="lazy" />
+          </a>
+        ) : (
+          <img src={partner.data.logo} alt={partner.data.name} loading="lazy" />
+        )}
+      </li>
+    ))}
+  </ul>
+</section>

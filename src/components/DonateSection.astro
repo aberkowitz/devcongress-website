@@ -1,0 +1,17 @@
+---
+interface Props {
+  paystackUrl: string;
+}
+
+const { paystackUrl } = Astro.props;
+---
+
+<section id="donate">
+  <h2>Keep DevCongress running</h2>
+  <p>
+    DevCongress is community-funded. Your donation directly supports meetups,
+    mentorship programs, and resources for tech talents across Ghana and Africa.
+    Every contribution, big or small, keeps the community growing.
+  </p>
+  <a href={paystackUrl} target="_blank" rel="noopener noreferrer">Donate via Paystack</a>
+</section>

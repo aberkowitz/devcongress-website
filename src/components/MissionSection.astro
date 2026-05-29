@@ -1,0 +1,29 @@
+---
+interface MissionItem {
+  heading: string;
+  description: string;
+  stat: string;
+}
+
+interface Props {
+  mission: MissionItem[];
+  slackUrl: string;
+}
+
+const { mission, slackUrl } = Astro.props;
+---
+
+<section id="mission">
+  <h2>That's why we created DevCongress</h2>
+  <ol>
+    {mission.map((item, i) => (
+      <li>
+        <span>{i}</span>
+        <h3>{item.heading}</h3>
+        <p>{item.description}</p>
+        <strong>{item.stat}</strong>
+      </li>
+    ))}
+  </ol>
+  <a href={slackUrl} target="_blank" rel="noopener noreferrer">Join Community</a>
+</section>

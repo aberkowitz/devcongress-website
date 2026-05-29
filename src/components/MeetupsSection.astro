@@ -1,0 +1,42 @@
+---
+interface Meetup {
+  id: string;
+  data: {
+    name: string;
+    date: string;
+    location: string;
+    description: string;
+    cover: string;
+    photos: string[];
+  };
+}
+
+interface Props {
+  meetups: Meetup[];
+}
+
+const { meetups } = Astro.props;
+const sorted = [...meetups].sort((a, b) => b.data.date.localeCompare(a.data.date));
+---
+
+<section id="meetups">
+  <h2>Meetups</h2>
+  {sorted.map((meetup) => (
+    <article>
+      <h3>{meetup.data.name}</h3>
+      <p>
+        <time datetime={meetup.data.date}>{meetup.data.date}</time>
+        &mdash; {meetup.data.location}
+      </p>
+      <p>{meetup.data.description}</p>
+      <img src={meetup.data.cover} alt={`${meetup.data.name} cover photo`} loading="lazy" />
+      <ul>
+        {meetup.data.photos.map((photo, i) => (
+          <li>
+            <img src={photo} alt={`${meetup.data.name} photo ${i + 1}`} loading="lazy" />
+          </li>
+        ))}
+      </ul>
+    </article>
+  ))}
+</section>

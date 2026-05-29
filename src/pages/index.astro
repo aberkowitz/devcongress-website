@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+
+import Navbar from '../components/Navbar.astro';
+import HeroSection from '../components/HeroSection.astro';
+import RolesSection from '../components/RolesSection.astro';
+import MissionSection from '../components/MissionSection.astro';
+import GetStartedSection from '../components/GetStartedSection.astro';
+import ActivitiesSection from '../components/ActivitiesSection.astro';
+import MeetupsSection from '../components/MeetupsSection.astro';
+import DonateSection from '../components/DonateSection.astro';
+import AdminsSection from '../components/AdminsSection.astro';
+import PartnersSection from '../components/PartnersSection.astro';
+import FooterSection from '../components/FooterSection.astro';
+
+const siteEntries = await getCollection('site');
+const site = siteEntries[0]!.data;
+
+const admins = await getCollection('admins');
+const activities = await getCollection('activities');
+const partners = await getCollection('partners');
+const meetups = await getCollection('meetups');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DevCongress | Where Africa's tech talents learn, grow, and build</title>
+    <meta
+      name="description"
+      content="DevCongress is Ghana's most vibrant tech community. Connect with developers, access mentorship, and build projects that matter."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="icon" href="/favicon.ico" />
+  </head>
+  <body>
+    <Navbar socials={site.socials} slackUrl={site.community_slack_url} />
+    <main>
+      <HeroSection
+        stats={site.stats}
+        slackUrl={site.community_slack_url}
+        paystackUrl={site.paystack_url}
+        youtubeEmbedUrl={site.youtube_embed_url}
+      />
+      <RolesSection roles={site.roles} />
+      <MissionSection mission={site.mission} slackUrl={site.community_slack_url} />
+      <GetStartedSection slackUrl={site.community_slack_url} />
+      <ActivitiesSection activities={activities} />
+      <MeetupsSection meetups={meetups} />
+      <DonateSection paystackUrl={site.paystack_url} />
+      <AdminsSection admins={admins} />
+      <PartnersSection partners={partners} />
+    </main>
+    <FooterSection socials={site.socials} />
+  </body>
+</html>

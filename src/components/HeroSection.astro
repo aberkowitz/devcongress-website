@@ -1,0 +1,59 @@
+---
+interface Stats {
+  talents_helped: string;
+  hired: string;
+  sessions: string;
+  resources: string;
+}
+
+interface Props {
+  stats: Stats;
+  slackUrl: string;
+  paystackUrl: string;
+  youtubeEmbedUrl: string;
+}
+
+const { stats, slackUrl, paystackUrl, youtubeEmbedUrl } = Astro.props;
+---
+
+<section id="hero">
+  <h1>
+    Helped <strong>{stats.talents_helped}</strong> tech talents grow.
+    <strong>{stats.hired}</strong> hired.
+    Countless questions answered.
+  </h1>
+  <p>
+    Join Ghana's most vibrant tech community. Connect and collaborate with fellow
+    developers, access mentorship, and build projects that matter.
+  </p>
+  <ul>
+    <li><a href={slackUrl} target="_blank" rel="noopener noreferrer">Join Community</a></li>
+    <li><a href={paystackUrl} target="_blank" rel="noopener noreferrer">Support Mission</a></li>
+  </ul>
+  <dl>
+    <div>
+      <dt>Tech talents helped</dt>
+      <dd>{stats.talents_helped}</dd>
+    </div>
+    <div>
+      <dt>Hired through community</dt>
+      <dd>{stats.hired}</dd>
+    </div>
+    <div>
+      <dt>Community sessions</dt>
+      <dd>{stats.sessions}</dd>
+    </div>
+    <div>
+      <dt>Shared resources</dt>
+      <dd>{stats.resources}</dd>
+    </div>
+  </dl>
+  <iframe
+    src={youtubeEmbedUrl}
+    title="DevCongress — Community Highlight"
+    loading="lazy"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</section>

@@ -1,0 +1,33 @@
+---
+interface Social {
+  platform: string;
+  url: string;
+}
+
+interface Props {
+  socials: Social[];
+  slackUrl: string;
+}
+
+const { socials, slackUrl } = Astro.props;
+---
+
+<nav>
+  <a href="/">DevCongress</a>
+  <ul>
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#activities">Activities</a></li>
+    <li><a href="#meetups">Meetups</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#partners">Partners</a></li>
+    <li><a href="#donate">Support Us</a></li>
+  </ul>
+  <ul>
+    {socials.map((s) => (
+      <li>
+        <a href={s.url} target="_blank" rel="noopener noreferrer">{s.platform}</a>
+      </li>
+    ))}
+  </ul>
+  <a href={slackUrl} target="_blank" rel="noopener noreferrer">Join Community</a>
+</nav>
