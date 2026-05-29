@@ -8,4 +8,5 @@ import "strings"
 	link!:        =~"^/"
 	color!:       =~"^#[0-9a-fA-F]{6}$"
 	order!:       int & >=1
+	status!:      "active" | "ongoing" | "upcoming"
 }

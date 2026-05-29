@@ -1,42 +1,91 @@
 ---
 interface Partner {
   id: string;
-  data: {
-    name: string;
-    logo: string;
-    url?: string;
-    tier?: string;
-  };
+  data: { name: string; logo: string; url?: string; tier?: string; };
 }
-
-interface Props {
-  partners: Partner[];
-}
-
+interface Props { partners: Partner[]; }
 const { partners } = Astro.props;
 
-const tierOrder: Record<string, number> = { gold: 1, silver: 2, community: 3 };
-const sorted = [...partners].sort((a, b) => {
-  const ta = tierOrder[a.data.tier ?? 'community'] ?? 3;
-  const tb = tierOrder[b.data.tier ?? 'community'] ?? 3;
-  return ta - tb;
-});
+const sponsors   = partners.filter(p => p.data.tier === 'gold' || p.data.tier === 'silver')
+  .sort((a, b) => (a.data.tier === 'gold' ? -1 : 1));
+const community  = partners.filter(p => !p.data.tier || p.data.tier === 'community');
 ---
 
-<section id="partners">
-  <h2>Partners &amp; Sponsors</h2>
-  <p>We are grateful for the support of the following organisations.</p>
-  <ul>
-    {sorted.map((partner) => (
-      <li>
-        {partner.data.url ? (
-          <a href={partner.data.url} target="_blank" rel="noopener noreferrer">
-            <img src={partner.data.logo} alt={partner.data.name} loading="lazy" />
-          </a>
-        ) : (
-          <img src={partner.data.logo} alt={partner.data.name} loading="lazy" />
-        )}
-      </li>
-    ))}
-  </ul>
+<section class="section" id="partners">
+  <div class="container">
+    <p class="section-label">Partners</p>
+    <h2 class="section-heading partners-heading">Built with support from</h2>
+
+    {sponsors.length > 0 && (
+      <div class="partner-group">
+        <p class="partner-group-label">Sponsors</p>
+        <ul class="partner-row">
+          {sponsors.map((p) => (
+            <li class="partner-item">
+              {p.data.url
+                ? <a href={p.data.url} target="_blank" rel="noopener noreferrer" aria-label={p.data.name}>
+                    <img src={p.data.logo} alt={p.data.name} loading="lazy" />
+                  </a>
+                : <img src={p.data.logo} alt={p.data.name} loading="lazy" />
+              }
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {community.length > 0 && (
+      <div class="partner-group">
+        <p class="partner-group-label">Community partners</p>
+        <ul class="partner-row">
+          {community.map((p) => (
+            <li class="partner-item">
+              {p.data.url
+                ? <a href={p.data.url} target="_blank" rel="noopener noreferrer" aria-label={p.data.name}>
+                    <img src={p.data.logo} alt={p.data.name} loading="lazy" />
+                  </a>
+                : <img src={p.data.logo} alt={p.data.name} loading="lazy" />
+              }
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
 </section>
+
+<style>
+  .partners-heading { margin-bottom: var(--space-8); }
+
+  .partner-group { margin-bottom: var(--space-8); }
+
+  .partner-group-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-5);
+  }
+
+  .partner-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-7);
+  }
+
+  .partner-item img {
+    max-height: 36px;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.5;
+    transition: filter 250ms ease, opacity 250ms ease;
+  }
+
+  .partner-item:hover img,
+  .partner-item a:focus img {
+    filter: grayscale(0);
+    opacity: 1;
+  }
+</style>

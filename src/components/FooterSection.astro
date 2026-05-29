@@ -1,39 +1,138 @@
 ---
-interface Social {
-  platform: string;
-  url: string;
-}
-
-interface Props {
-  socials: Social[];
-}
-
+interface Social { platform: string; url: string; }
+interface Props { socials: Social[]; }
 const { socials } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
-<footer>
-  <nav>
-    <ul>
-      <li><a href="#mission">Mission</a></li>
-      <li><a href="#activities">Activities</a></li>
-      <li><a href="#meetups">Meetups</a></li>
-      <li><a href="#team">Team</a></li>
-      <li><a href="#partners">Partners</a></li>
-      <li><a href="#donate">Support Us</a></li>
-    </ul>
-  </nav>
-  <ul>
-    {socials.map((s) => (
-      <li>
-        <a href={s.url} target="_blank" rel="noopener noreferrer">{s.platform}</a>
-      </li>
-    ))}
-  </ul>
-  <p>
-    &copy; {year} DevCongress. Building Africa's tech community.
-  </p>
-  <p>
-    <a href="mailto:hello@devcongress.org">hello@devcongress.org</a>
-  </p>
+<footer class="footer">
+  <div class="container footer-inner">
+
+    <div class="footer-brand">
+      <a href="/" class="footer-logo">DevCongress</a>
+      <p class="footer-tagline">Africa's home for builders.</p>
+      <a href="mailto:hello@devcongress.org" class="footer-email">hello@devcongress.org</a>
+    </div>
+
+    <nav class="footer-nav" aria-label="Footer">
+      <p class="footer-nav-label">Links</p>
+      <ul>
+        <li><a href="#community">Community</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#meetups">Meetups</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#partners">Partners</a></li>
+        <li><a href="#donate">Support Us</a></li>
+        <li><a href="/website/coc/">Code of Conduct</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer-social">
+      <p class="footer-nav-label">Find us</p>
+      <ul>
+        {socials.map((s) => (
+          <li>
+            <a href={s.url} target="_blank" rel="noopener noreferrer" class="footer-social-link">
+              {s.platform}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <p>&copy; {year} DevCongress. All rights reserved.</p>
+      <a href="/website/coc/" class="footer-coc-link">Code of Conduct</a>
+    </div>
+  </div>
 </footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg);
+  }
+
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    padding-block: var(--space-9);
+  }
+
+  @media (min-width: 720px) {
+    .footer-inner { grid-template-columns: 2fr 1fr 1fr; }
+  }
+
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-accent);
+    display: block;
+    margin-bottom: var(--space-3);
+  }
+
+  .footer-tagline {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-3);
+  }
+
+  .footer-email {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    transition: color 150ms ease;
+  }
+  .footer-email:hover { color: var(--color-accent); }
+
+  .footer-nav-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-4);
+  }
+
+  .footer-nav ul,
+  .footer-social ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .footer-nav a,
+  .footer-social-link {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    transition: color 150ms ease;
+    text-transform: capitalize;
+  }
+
+  .footer-nav a:hover,
+  .footer-social-link:hover { color: var(--color-text); }
+
+  .footer-bottom {
+    border-top: 1px solid var(--color-border);
+    padding-block: var(--space-5);
+  }
+
+  .footer-bottom-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .footer-bottom p,
+  .footer-coc-link {
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+  }
+
+  .footer-coc-link:hover { color: var(--color-text-muted); }
+</style>

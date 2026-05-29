@@ -5,10 +5,10 @@ package schema
 	paystack_url!:        =~"^https://"
 	youtube_embed_url!:   =~"^https://"
 	stats!: {
-		talents_helped!: string
-		hired!:          string
-		sessions!:       string
-		resources!:      string
+		members!:  string
+		hired!:    string
+		events!:   string
+		mentored!: string
 	}
 	socials!: [...#Social]
 	roles!:   [...string]

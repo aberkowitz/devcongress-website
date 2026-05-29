@@ -23,6 +23,7 @@ const activities = defineCollection({
     link: z.string().startsWith('/'),
     color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
     order: z.number().int().min(1),
+    status: z.enum(['active', 'ongoing', 'upcoming']),
   }),
 });
 
@@ -61,10 +62,10 @@ const site = defineCollection({
     paystack_url: z.string().url(),
     youtube_embed_url: z.string().url(),
     stats: z.object({
-      talents_helped: z.string(),
+      members: z.string(),
       hired: z.string(),
-      sessions: z.string(),
-      resources: z.string(),
+      events: z.string(),
+      mentored: z.string(),
     }),
     socials: z.array(socialSchema),
     roles: z.array(z.string()),

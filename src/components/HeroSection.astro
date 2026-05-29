@@ -1,59 +1,98 @@
 ---
-interface Stats {
-  talents_helped: string;
-  hired: string;
-  sessions: string;
-  resources: string;
-}
-
 interface Props {
-  stats: Stats;
   slackUrl: string;
   paystackUrl: string;
   youtubeEmbedUrl: string;
 }
-
-const { stats, slackUrl, paystackUrl, youtubeEmbedUrl } = Astro.props;
+const { slackUrl, paystackUrl, youtubeEmbedUrl } = Astro.props;
 ---
 
-<section id="hero">
-  <h1>
-    Helped <strong>{stats.talents_helped}</strong> tech talents grow.
-    <strong>{stats.hired}</strong> hired.
-    Countless questions answered.
-  </h1>
-  <p>
-    Join Ghana's most vibrant tech community. Connect and collaborate with fellow
-    developers, access mentorship, and build projects that matter.
-  </p>
-  <ul>
-    <li><a href={slackUrl} target="_blank" rel="noopener noreferrer">Join Community</a></li>
-    <li><a href={paystackUrl} target="_blank" rel="noopener noreferrer">Support Mission</a></li>
-  </ul>
-  <dl>
-    <div>
-      <dt>Tech talents helped</dt>
-      <dd>{stats.talents_helped}</dd>
+<section class="hero section" id="hero">
+  <div class="container">
+    <div class="hero-content">
+      <p class="section-label">DevCongress</p>
+      <h1 class="hero-headline">
+        Africa's home<br />for builders.
+      </h1>
+      <p class="hero-sub">
+        A tech community where developers, designers, founders, and makers
+        connect, grow, and ship together.
+      </p>
+      <div class="hero-ctas">
+        <a href={slackUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          Join on Slack
+        </a>
+        <a href={paystackUrl} target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+          Support the mission &rarr;
+        </a>
+      </div>
     </div>
-    <div>
-      <dt>Hired through community</dt>
-      <dd>{stats.hired}</dd>
+
+    <div class="hero-video">
+      <iframe
+        src={youtubeEmbedUrl}
+        title="DevCongress — Community Highlight"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
     </div>
-    <div>
-      <dt>Community sessions</dt>
-      <dd>{stats.sessions}</dd>
-    </div>
-    <div>
-      <dt>Shared resources</dt>
-      <dd>{stats.resources}</dd>
-    </div>
-  </dl>
-  <iframe
-    src={youtubeEmbedUrl}
-    title="DevCongress — Community Highlight"
-    loading="lazy"
-    referrerpolicy="strict-origin-when-cross-origin"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowfullscreen
-  ></iframe>
+  </div>
 </section>
+
+<style>
+  .hero { padding-top: clamp(3rem, 8vw, 6rem); }
+
+  .hero .container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-9);
+  }
+
+  @media (min-width: 900px) {
+    .hero .container {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: var(--space-8);
+    }
+  }
+
+  .hero-headline {
+    font-family: var(--font-display);
+    font-size: clamp(var(--text-3xl), 6vw, var(--text-4xl));
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--color-text);
+    margin-bottom: var(--space-5);
+    letter-spacing: -0.02em;
+  }
+
+  .hero-sub {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: var(--leading-body);
+    max-width: 480px;
+    margin-bottom: var(--space-7);
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .hero-video {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-3);
+  }
+
+  .hero-video iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: none;
+  }
+</style>

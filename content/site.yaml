@@ -2,22 +2,25 @@
   community_slack_url: https://devcongress-community.slack.com/join/shared_invite/zt-3elxv0f0y-U6JoK8Al4ExQp8ERaS8uwg#/shared-invite/email
   paystack_url: https://paystack.shop/pay/devcongress-meetup
   youtube_embed_url: https://www.youtube-nocookie.com/embed/vNWWGWXjybg?rel=0&modestbranding=1&playsinline=1
+
   stats:
-    talents_helped: "1000+"
+    members: "1000+"
     hired: "100+"
-    sessions: "30+"
-    resources: "100+"
+    events: "30+"
+    mentored: "500+"
+
   socials:
     - platform: linkedin
       url: https://www.linkedin.com/company/devcongress
     - platform: x
-      url: https://twitter.com/devcongress
+      url: https://x.com/devcongress
     - platform: github
       url: https://github.com/devcongress
     - platform: youtube
       url: https://youtube.com/devcongress
     - platform: facebook
       url: https://facebook.com/devcongress
+
   roles:
     - Software Engineer
     - Product Manager
@@ -34,6 +37,7 @@
     - Legal Advisor
     - Sales Professional
     - System Architect
+
   mission:
     - heading: Build confidence among tech talents.
       description: Over 500+ professionals upskilled through mentorship, events, and hands-on feedback.

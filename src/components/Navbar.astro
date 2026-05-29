@@ -1,33 +1,124 @@
 ---
-interface Social {
-  platform: string;
-  url: string;
-}
-
-interface Props {
-  socials: Social[];
-  slackUrl: string;
-}
-
-const { socials, slackUrl } = Astro.props;
+interface Social { platform: string; url: string; }
+interface Props { slackUrl: string; }
+const { slackUrl } = Astro.props;
 ---
 
-<nav>
-  <a href="/">DevCongress</a>
-  <ul>
-    <li><a href="#mission">Mission</a></li>
-    <li><a href="#activities">Activities</a></li>
-    <li><a href="#meetups">Meetups</a></li>
-    <li><a href="#team">Team</a></li>
-    <li><a href="#partners">Partners</a></li>
-    <li><a href="#donate">Support Us</a></li>
-  </ul>
-  <ul>
-    {socials.map((s) => (
-      <li>
-        <a href={s.url} target="_blank" rel="noopener noreferrer">{s.platform}</a>
-      </li>
-    ))}
-  </ul>
-  <a href={slackUrl} target="_blank" rel="noopener noreferrer">Join Community</a>
-</nav>
+<header class="navbar">
+  <div class="container navbar-inner">
+    <a href="/" class="navbar-logo">DevCongress</a>
+    <nav class="navbar-links" aria-label="Primary">
+      <a href="#community">Community</a>
+      <a href="#programs">Programs</a>
+      <a href="#meetups">Meetups</a>
+    </nav>
+    <a href={slackUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary navbar-cta">
+      Join on Slack
+    </a>
+    <button class="navbar-burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <nav>
+      <a href="#community">Community</a>
+      <a href="#programs">Programs</a>
+      <a href="#meetups">Meetups</a>
+      <a href={slackUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Join on Slack</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13, 13, 13, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .navbar-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    height: 64px;
+  }
+
+  .navbar-logo {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-accent);
+    flex-shrink: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .navbar-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    margin-right: auto;
+  }
+
+  .navbar-links a {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    transition: color 150ms ease;
+  }
+  .navbar-links a:hover { color: var(--color-text); }
+
+  .navbar-cta { margin-left: auto; }
+
+  .navbar-burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    padding: var(--space-2);
+    margin-left: auto;
+  }
+  .navbar-burger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--color-text);
+    border-radius: 2px;
+    transition: transform 200ms ease, opacity 200ms ease;
+  }
+
+  .mobile-menu {
+    display: none;
+    padding: var(--space-5) var(--container-pad);
+    border-top: 1px solid var(--color-border);
+  }
+  .mobile-menu nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .mobile-menu a {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+  }
+  .mobile-menu .btn { align-self: flex-start; margin-top: var(--space-2); }
+
+  .mobile-menu.is-open { display: block; }
+
+  @media (max-width: 640px) {
+    .navbar-links,
+    .navbar-cta { display: none; }
+    .navbar-burger { display: flex; }
+  }
+</style>
+
+<script>
+  const burger = document.querySelector('.navbar-burger') as HTMLButtonElement;
+  const menu   = document.getElementById('mobile-menu');
+  burger?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('is-open');
+    burger.setAttribute('aria-expanded', String(open));
+    menu?.setAttribute('aria-hidden', String(!open));
+  });
+</script>
