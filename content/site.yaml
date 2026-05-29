@@ -4,10 +4,12 @@
   youtube_embed_url: https://www.youtube-nocookie.com/embed/vNWWGWXjybg?rel=0&modestbranding=1&playsinline=1
 
   stats:
-    members: "6000+"
-    hired: "100+"
-    events: "30+"
-    mentored: "500+"
+    - value: "6000+"
+      label: "Community Members"
+      description: "Developers, Designers, Founders, Hackers and Makers across Africa."
+    - value: "10+"
+      label: "Years"
+      description: "Building Community since 2015."
 
   socials:
     - platform: linkedin

@@ -61,12 +61,11 @@ const site = defineCollection({
     community_slack_url: z.string().url(),
     paystack_url: z.string().url(),
     youtube_embed_url: z.string().url(),
-    stats: z.object({
-      members: z.string(),
-      hired: z.string(),
-      events: z.string(),
-      mentored: z.string(),
-    }),
+    stats: z.array(z.object({
+      value: z.string(),
+      label: z.string(),
+      description: z.string().optional(),
+    })),
     socials: z.array(socialSchema),
     roles: z.array(z.string()),
     mission: z.array(missionItemSchema),

@@ -1,81 +1,75 @@
 ---
-interface Stats { members: string; hired: string; events: string; mentored: string; }
-interface Props { stats: Stats; }
+interface Stat {
+  value: string;
+  label: string;
+  description?: string;
+}
+interface Props { stats: Stat[]; }
 const { stats } = Astro.props;
-
-const items = [
-  { value: stats.members,  label: 'Community members' },
-  { value: stats.hired,    label: 'Members hired'     },
-  { value: stats.events,   label: 'Events run'        },
-  { value: stats.mentored, label: 'Mentored'          },
-];
 ---
 
-<div class="stats-bar">
-  <div class="container stats-inner">
-    {items.map((item, i) => (
-      <>
-        <div class="stat">
-          <span class="stat-value">{item.value}</span>
-          <span class="stat-label">{item.label}</span>
-        </div>
-        {i < items.length - 1 && <div class="stat-divider" aria-hidden="true"></div>}
-      </>
-    ))}
+<div class="stats-section">
+  <div class="container">
+    <ul class="stats-grid">
+      {stats.map((stat) => (
+        <li class="stat-card card">
+          <span class="stat-value">{stat.value}</span>
+          <span class="stat-label">{stat.label}</span>
+          {stat.description && (
+            <p class="stat-desc">{stat.description}</p>
+          )}
+        </li>
+      ))}
+    </ul>
   </div>
 </div>
 
 <style>
-  .stats-bar {
-    border-top: 2px solid var(--black);
-    border-bottom: 2px solid var(--black);
-    background: var(--bg-white);
+  .stats-section {
     padding-block: var(--s7);
+    background: var(--bg);
   }
 
-  .stats-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--s5);
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s6);
   }
 
-  .stat {
+  @media (max-width: 600px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .stat-card {
+    padding: var(--s6) var(--s6);
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: var(--s2);
-    flex: 1;
-    min-width: 120px;
-    text-align: center;
+    box-shadow: 6px 6px 0 var(--pink);
   }
 
   .stat-value {
     font-family: var(--font-serif);
-    font-size: clamp(var(--text-3xl), 5vw, var(--text-4xl));
+    font-size: clamp(var(--text-4xl), 10vw, var(--text-5xl));
     line-height: 1;
     color: var(--pink);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
+    display: block;
   }
 
   .stat-label {
-    font-size: var(--text-sm);
-    font-weight: 500;
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--text);
+    line-height: var(--leading-snug);
+    display: block;
+  }
+
+  .stat-desc {
+    font-size: var(--text-base);
     color: var(--text-muted);
-    letter-spacing: 0.02em;
-  }
-
-  .stat-divider {
-    width: 2px;
-    height: 48px;
-    background: var(--border-light);
-    flex-shrink: 0;
-  }
-
-  @media (max-width: 600px) {
-    .stats-inner { justify-content: center; }
-    .stat-divider { display: none; }
-    .stat { min-width: calc(50% - var(--s5)); }
+    line-height: var(--leading-body);
   }
 </style>
