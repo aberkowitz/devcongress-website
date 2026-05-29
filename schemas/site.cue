@@ -44,5 +44,4 @@ package schema
 #MissionItem: {
 	heading!:     string
 	description!: string
-	stat!:        string
 }

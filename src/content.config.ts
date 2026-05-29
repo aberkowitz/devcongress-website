@@ -52,7 +52,6 @@ const meetups = defineCollection({
 const missionItemSchema = z.object({
   heading: z.string(),
   description: z.string(),
-  stat: z.string(),
 });
 
 const site = defineCollection({

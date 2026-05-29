@@ -54,22 +54,17 @@
 
   mission_section:
     eyebrow: "Mission"
-    headline: "We exist because Africa's builders deserve a community that takes them seriously."
+    headline: "We exist because Africa's builders deserve a community that takes them *seriously*."
     body: "DevCongress is a movement. No paywalls, no gatekeeping — just builders helping builders grow across Africa and beyond."
     cta: "Join the community"
     items:
-      - heading: Build capacity & confidence through community led mentorship.
+      - heading: Build capacity & confidence through community led *mentorship*.
         description: Over 500+ professionals upskilled through mentorship, events, and hands-on feedback.
-        stat: "500+"
-      - heading: Expose tech talents to a rich array of resources.
+      - heading: Expose tech talents to a rich array of *resources*.
         description: 30+ community sessions, 100+ shared resources, and growing.
-        stat: "100+"
-      - heading: Contribute to innovative and community-driven projects that create real impact.
+      - heading: Contribute to innovative and community-driven projects that create *real impact*.
         description: Contributed to 10+ community-led tools powering innovation across Africa.
-        stat: "10+"
-      - heading: Harness the collective strength of Africa's tech community to solve real problems.
+      - heading: Harness the collective strength of community to solve *real problems*.
         description: From solo learners to startup founders, we connect and grow together.
-        stat: "1000+"
-      - heading: Build the changemakers who shape a nation's technology policy & future.
+      - heading: Build the *changemakers* who shape a nation's technology policy & future.
         description: From community organising to national policy discussions, DevCongress members are agents of change — shaping the future of technology and society across Africa.
-        stat: "1000+"

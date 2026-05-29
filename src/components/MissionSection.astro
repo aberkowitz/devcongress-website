@@ -1,5 +1,5 @@
 ---
-interface MissionItem { heading: string; description: string; stat: string; }
+interface MissionItem { heading: string; description: string; }
 interface MissionSection {
   eyebrow: string;
   headline: string;
@@ -9,7 +9,15 @@ interface MissionSection {
 }
 interface Props { mission: MissionSection; slackUrl: string; }
 const { mission, slackUrl } = Astro.props;
-const nums = ['01', '02', '03', '04'];
+
+function parseEmphasis(text: string): { plain: boolean; text: string }[] {
+  return text.split(/\*(.+?)\*/).map((part, i) => ({
+    plain: i % 2 === 0,
+    text: part,
+  }));
+}
+
+const headlineParts = parseEmphasis(mission.headline);
 ---
 
 <section class="section" id="community">
@@ -17,29 +25,34 @@ const nums = ['01', '02', '03', '04'];
 
     <div class="mission-grid">
 
-      <!-- Left: sticky statement -->
       <div class="mission-left">
         <span class="eyebrow">{mission.eyebrow}</span>
         <h2 class="heading-serif mission-headline">
-          {mission.headline}
+          {headlineParts.map((part) =>
+            part.plain
+              ? part.text
+              : <span class="mission-pink">{part.text}</span>
+          )}
         </h2>
-        <p class="mission-body">
-          {mission.body}
-        </p>
+        <p class="mission-body">{mission.body}</p>
         <a href={slackUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
           {mission.cta}
         </a>
       </div>
 
-      <!-- Right: numbered list -->
       <ol class="mission-list">
         {mission.items.map((item, i) => (
           <li class="mission-item">
-            <div class="mission-num">{nums[i]}</div>
+            <div class="mission-num">{String(i + 1).padStart(2, '0')}</div>
             <div class="mission-content">
-              <h3 class="mission-item-heading">{item.heading}</h3>
+              <h3 class="mission-item-heading">
+                {parseEmphasis(item.heading).map((part) =>
+                  part.plain
+                    ? part.text
+                    : <span class="mission-pink">{part.text}</span>
+                )}
+              </h3>
               <p class="mission-item-desc">{item.description}</p>
-              <span class="mission-stat">{item.stat}</span>
             </div>
           </li>
         ))}
@@ -76,6 +89,8 @@ const nums = ['01', '02', '03', '04'];
     font-size: clamp(var(--text-2xl), 3vw, var(--text-3xl));
     line-height: var(--leading-snug);
   }
+
+  .mission-pink { color: var(--pink); }
 
   .mission-body {
     font-size: var(--text-base);
@@ -120,12 +135,5 @@ const nums = ['01', '02', '03', '04'];
     font-size: var(--text-sm);
     color: var(--text-mid);
     line-height: var(--leading-body);
-  }
-
-  .mission-stat {
-    font-size: var(--text-sm);
-    font-weight: 700;
-    color: var(--pink);
-    margin-top: var(--s1);
   }
 </style>
