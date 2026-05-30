@@ -74,12 +74,18 @@ schedule:
     title: DevCongress Support Announcement
     type: talk
     lead: null
-    resources: []
+    resources: 
+      - title:  Feedback Form
+        url: https://docs.google.com/forms/d/e/1FAIpQLSco-46QfOtkU70eOoFmskRa5TPLBGoVI34KudArxmrzO3dFdw/viewform
   - time: "3:10 PM"
-    title: Panel Discussion
+    title: Panel Discussion - The New NITA Bill
     type: panel
     lead: null
-    resources: []
+    resources:
+      - title: NATIONAL INFORMATION TECHNOLOGY AUTHORITY BILL, 2025
+        url: https://nita.gov.gh/wp-content/uploads/2025/NITA-2008-act-2025-1.pdf
+      - title: NITA REGULATORY | IT SERVICE PROVIDER REGISTRATION (FEES)
+        url: https://regulatory.nita.gov.gh/portal/regulatory/registration-of-it-firms
 
 photos: []
 videos: []
