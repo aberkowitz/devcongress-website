@@ -31,7 +31,9 @@ schedule:
     title: "Product Demo: Sankofa"
     type: talk
     lead: null
-    resources: []
+    resources: 
+      - title: ProblemDiscussion 
+        url: https://sankofa.dev
   - time: "11:30 AM"
     title: "Manny — Demo with Microcontrollers"
     type: workshop
@@ -58,7 +60,7 @@ schedule:
     lead: null
     resources: []
   - time: "1:50 PM"
-    title: System Design Session (CAP Theorem & Eventual Consistency - Blacko's Detty December Concert)
+    title: System Design Session (Blacko's Detty December Concert)
     type: open_discussion
     lead: Tonny-Bright
     resources: 
