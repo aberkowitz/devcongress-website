@@ -28,9 +28,29 @@ function formatDate(iso: string): string {
 }
 function formatTime(iso: string): string {
   return new Date(iso).toLocaleTimeString('en-GB', {
-    hour: '2-digit', minute: '2-digit', timeZoneName: 'short',
+    hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Accra', timeZoneName: 'short',
   });
 }
+
+// ── Timezone helpers ────────────────────────────────────────
+function parseTime12h(str: string): { h: number; m: number } | null {
+  const m = str.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!m) return null;
+  let h = +m[1];
+  if (m[3].toUpperCase() === 'PM' && h !== 12) h += 12;
+  if (m[3].toUpperCase() === 'AM' && h === 12) h = 0;
+  return { h, m: +m[2] };
+}
+function scheduleToISO(dateISO: string, timeStr: string): string | null {
+  const p = parseTime12h(timeStr);
+  if (!p) return null;
+  const d = new Date(dateISO);
+  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), p.h, p.m)).toISOString();
+}
+const scheduleItems = (d.schedule ?? []).map(item => ({
+  ...item,
+  iso: scheduleToISO(d.start, item.time),
+}));
 
 const scheduleTypeLabel: Record<string, string> = {
   networking:     'Networking',
@@ -69,7 +89,7 @@ const folderPhotos = photos.filter((photo) => photo.type === 'folder');
           </span>
           <h1 class="heading-serif meetup-title">{d.name}</h1>
           <div class="meetup-hero-meta">
-            <span>{formatDate(d.start)} · {formatTime(d.start)}</span>
+            <span data-utc={d.start} data-display="datetime">{formatDate(d.start)} · {formatTime(d.start)}</span>
             {d.location.map_url
               ? <a href={d.location.map_url} target="_blank" rel="noopener noreferrer" class="meetup-location-link">
                   📍 {d.location.name}
@@ -130,7 +150,7 @@ const folderPhotos = photos.filter((photo) => photo.type === 'folder');
           <div class="reg-card card">
             <div class="reg-copy">
               <h2 class="heading-serif reg-heading">Join us at this meetup</h2>
-              <p class="reg-meta">{formatDate(d.start)} · {formatTime(d.start)}</p>
+              <p class="reg-meta"><span data-utc={d.start} data-display="datetime">{formatDate(d.start)} · {formatTime(d.start)}</span></p>
               <p class="reg-location">📍 {d.location.name}</p>
             </div>
             <a href={d.registration_url} target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-reg">
@@ -209,14 +229,23 @@ const folderPhotos = photos.filter((photo) => photo.type === 'folder');
     {d.schedule && d.schedule.length > 0 && (
       <div class="schedule-section">
         <div class="container">
-          <span class="eyebrow">{status === 'past' ? 'Recap' : 'Schedule'}</span>
+          <div class="schedule-header-row">
+            <span class="eyebrow">{status === 'past' ? 'Recap' : 'Schedule'}</span>
+            <div class="tz-switch" role="radiogroup" aria-label="Time zone">
+              <span class="tz-switch-label tz-switch-label--active" data-tz-label="event">Event Time (GMT+0)</span>
+              <button class="tz-switch-track" role="radio" aria-checked="true" data-tz="event">
+                <span class="tz-switch-knob"></span>
+              </button>
+              <span class="tz-switch-label" data-tz-label="local">My Time (CEST+2)</span>
+            </div>
+          </div>
           <h2 class="heading-serif section-heading">
             {status === 'past' ? 'How the day went' : 'How the day will go'}
           </h2>
           <ol class="schedule-list">
-            {d.schedule.map((item) => (
+            {scheduleItems.map((item) => (
               <li class="schedule-item">
-                <div class="schedule-time">{item.time}</div>
+                <div class="schedule-time" data-utc={item.iso} data-display="time">{item.time}</div>
                 <div class="schedule-content">
                   <div class="schedule-top">
                     <h3 class="schedule-title">{item.title}</h3>
@@ -440,6 +469,65 @@ const folderPhotos = photos.filter((photo) => photo.type === 'folder');
   /* ── Schedule ────────────────────────────────────────── */
   .schedule-section { padding-block: var(--s9); border-bottom: 2px solid var(--black); background: var(--bg-white); }
 
+  .schedule-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* ── Timezone switch ────────────────────────────────── */
+  .tz-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    flex-shrink: 0;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .tz-switch-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: color 150ms ease;
+    pointer-events: none;
+  }
+  .tz-switch-label--active {
+    color: var(--text);
+  }
+
+  .tz-switch-track {
+    position: relative;
+    width: 48px;
+    height: 26px;
+    border: 2px solid var(--black);
+    border-radius: var(--r-full);
+    background: var(--bg-white);
+    padding: 0;
+    cursor: pointer;
+    transition: background 200ms ease;
+  }
+  .tz-switch-track[aria-checked="true"] {
+    background: var(--bg-white);
+  }
+  .tz-switch-track[aria-checked="false"] {
+    background: var(--pink-light);
+  }
+
+  .tz-switch-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--black);
+    transition: transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .tz-switch-track[aria-checked="false"] .tz-switch-knob {
+    transform: translateX(22px);
+  }
+
   .schedule-list { display: flex; flex-direction: column; border-top: 2px solid var(--black); }
 
   .schedule-item {
@@ -548,72 +636,106 @@ const folderPhotos = photos.filter((photo) => photo.type === 'folder');
 
 <script is:inline>
   (() => {
+    /* ── Lightbox ─────────────────────────────────────── */
     const lightbox = document.querySelector('[data-lightbox]');
     const lightboxImage = document.querySelector('[data-lightbox-image]');
     const closeButton = document.querySelector('[data-lightbox-close]');
     const photoTriggers = Array.from(document.querySelectorAll('.photo-trigger'));
     let currentIndex = -1;
 
-    if (!lightbox || !lightboxImage) return;
-
-    function openImageAt(index) {
-      if (!photoTriggers.length) return;
-
-      const normalized = (index + photoTriggers.length) % photoTriggers.length;
-      const trigger = photoTriggers[normalized];
-      const src = trigger.dataset.photoSrc;
-      if (!src) return;
-
-      currentIndex = normalized;
-      lightboxImage.src = src;
-      lightboxImage.alt = trigger.dataset.photoAlt ?? 'Meetup photo';
-      lightbox.hidden = false;
-      document.body.style.overflow = 'hidden';
+    if (lightbox && lightboxImage) {
+      function openImageAt(index) {
+        if (!photoTriggers.length) return;
+        const normalized = (index + photoTriggers.length) % photoTriggers.length;
+        const trigger = photoTriggers[normalized];
+        const src = trigger.dataset.photoSrc;
+        if (!src) return;
+        currentIndex = normalized;
+        lightboxImage.src = src;
+        lightboxImage.alt = trigger.dataset.photoAlt ?? 'Meetup photo';
+        lightbox.hidden = false;
+        document.body.style.overflow = 'hidden';
+      }
+      function closeLightbox() {
+        lightbox.hidden = true;
+        lightboxImage.src = '';
+        lightboxImage.alt = '';
+        currentIndex = -1;
+        document.body.style.overflow = '';
+      }
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const trigger = target.closest('.photo-trigger');
+        if (trigger instanceof HTMLElement) {
+          const clickedIndex = photoTriggers.indexOf(trigger);
+          if (clickedIndex === -1) return;
+          openImageAt(clickedIndex);
+          return;
+        }
+        if (target === lightbox || target === closeButton) closeLightbox();
+      });
+      document.addEventListener('keydown', (event) => {
+        if (lightbox.hidden) return;
+        if (event.key === 'Escape') { closeLightbox(); return; }
+        if (event.key === 'ArrowRight') { event.preventDefault(); openImageAt(currentIndex + 1); return; }
+        if (event.key === 'ArrowLeft') { event.preventDefault(); openImageAt(currentIndex - 1); }
+      });
     }
 
-    function closeLightbox() {
-      lightbox.hidden = true;
-      lightboxImage.src = '';
-      lightboxImage.alt = '';
-      currentIndex = -1;
-      document.body.style.overflow = '';
+    /* ── Timezone switch ──────────────────────────────── */
+    const tzSwitch = document.querySelector('.tz-switch');
+    const EVENT_TZ = 'Africa/Accra';
+    const STORAGE_KEY = 'dc-tz';
+
+    function fmtOpts(tz, extra) {
+      const o = { ...extra };
+      if (tz !== 'local') o.timeZone = tz;
+      return o;
+    }
+    function formatDate(iso, tz) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-GB', fmtOpts(tz, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
+    }
+    function formatTime(iso, tz) {
+      const d = new Date(iso);
+      return d.toLocaleTimeString('en-GB', fmtOpts(tz, { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' }));
     }
 
-    document.addEventListener('click', (event) => {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-
-      const trigger = target.closest('.photo-trigger');
-      if (trigger instanceof HTMLElement) {
-        const clickedIndex = photoTriggers.indexOf(trigger);
-        if (clickedIndex === -1) return;
-        openImageAt(clickedIndex);
-        return;
+    function applyTimezone(tz) {
+      document.querySelectorAll('[data-utc]').forEach(el => {
+        const iso = el.dataset.utc;
+        if (!iso) return;
+        if (el.dataset.display === 'time') {
+          el.textContent = formatTime(iso, tz);
+        } else {
+          el.textContent = formatDate(iso, tz) + ' \u00b7 ' + formatTime(iso, tz);
+        }
+      });
+      const track = document.querySelector('.tz-switch-track');
+      if (track) {
+        const isLocal = tz === 'local';
+        track.dataset.tz = isLocal ? 'local' : 'event';
+        track.setAttribute('aria-checked', String(!isLocal));
       }
+      document.querySelectorAll('.tz-switch-label').forEach(lbl => {
+        const isActive = lbl.dataset.tzLabel === 'local' ? tz === 'local' : tz !== 'local';
+        lbl.classList.toggle('tz-switch-label--active', isActive);
+      });
+    }
 
-      if (target === lightbox || target === closeButton) {
-        closeLightbox();
-      }
-    });
+    if (tzSwitch) {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved === 'local') applyTimezone('local');
 
-    document.addEventListener('keydown', (event) => {
-      if (lightbox.hidden) return;
-
-      if (event.key === 'Escape') {
-        closeLightbox();
-        return;
-      }
-
-      if (event.key === 'ArrowRight') {
-        event.preventDefault();
-        openImageAt(currentIndex + 1);
-        return;
-      }
-
-      if (event.key === 'ArrowLeft') {
-        event.preventDefault();
-        openImageAt(currentIndex - 1);
-      }
-    });
+      tzSwitch.addEventListener('click', () => {
+        const track = document.querySelector('.tz-switch-track');
+        if (!track) return;
+        const current = track.dataset.tz === 'local' ? 'local' : 'event';
+        const next = current === 'local' ? EVENT_TZ : 'local';
+        localStorage.setItem(STORAGE_KEY, next === 'local' ? 'local' : 'event');
+        applyTimezone(next);
+      });
+    }
   })();
 </script>
