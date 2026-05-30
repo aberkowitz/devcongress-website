@@ -1,4 +1,7 @@
 ---
+import { getCollection } from 'astro:content';
+import FooterSection from '../components/FooterSection.astro';
+
 interface Props {
   title?: string;
   description?: string;
@@ -7,6 +10,9 @@ const {
   title = "DevCongress | Africa's home for builders",
   description = "DevCongress is a tech community where developers, designers, founders, and makers across Africa connect, grow, and build together.",
 } = Astro.props;
+
+const siteEntries = await getCollection('site');
+const site        = siteEntries[0]!.data;
 ---
 
 <!doctype html>
@@ -35,6 +41,7 @@ const {
   </head>
   <body>
     <slot />
+    <FooterSection socials={site.socials} />
   </body>
 </html>
 

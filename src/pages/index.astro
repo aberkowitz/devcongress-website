@@ -11,7 +11,6 @@ import MeetupsSection from '../components/MeetupsSection.astro';
 import AdminsSection from '../components/AdminsSection.astro';
 import PartnersSection from '../components/PartnersSection.astro';
 import DonateSection from '../components/DonateSection.astro';
-import FooterSection from '../components/FooterSection.astro';
 
 const siteEntries = await getCollection('site');
 const site        = siteEntries[0]!.data;
@@ -42,5 +41,4 @@ const meetups     = await getCollection('meetups');
     <PartnersSection partners={partners} />
     <DonateSection paystackUrl={site.paystack_url} donate={site.donate_section} />
   </main>
-  <FooterSection socials={site.socials} />
 </Base>
